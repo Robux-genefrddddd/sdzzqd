@@ -2,6 +2,5 @@
   "buildCommand": "npm run build:client",
   "outputDirectory": "dist/spa",
   "installCommand": "pnpm install",
-  "framework": "vite",
-  "nodejs": "22.x"
+  "framework": "vite"
 }

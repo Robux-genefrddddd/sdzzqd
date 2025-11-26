@@ -2,5 +2,11 @@
   "buildCommand": "npm run build:client",
   "outputDirectory": "dist/spa",
   "installCommand": "pnpm install",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }

@@ -367,22 +367,22 @@ export function Sidebar({
         {/* Message Usage Section */}
         <div
           id="messages-counter"
-          className="px-4 py-4 border-t border-white/10 animate-fadeIn"
+          className="px-3 py-4 border-t border-white/[0.08] animate-fadeIn mx-3 bg-white/[0.02] rounded-xl"
           style={{ animationDelay: "0.25s" }}
         >
-          <div className="flex items-center gap-2 mb-2 justify-between">
-            <span className="text-xs text-white/70 font-medium">Messages</span>
+          <div className="flex items-center gap-2 mb-2.5 justify-between">
+            <span className="text-xs text-foreground/70 font-medium">Messages</span>
             <button
               onClick={handleSyncMessages}
               disabled={isSyncing}
-              className="p-1 hover:bg-white/10 rounded transition-colors disabled:opacity-50"
+              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50 hover:-translate-y-0.5"
               title="Synchroniser"
             >
               {isSyncing ? (
-                <Loader2 size={14} className="animate-spin text-white/60" />
+                <Loader2 size={14} className="animate-spin text-foreground/60" />
               ) : (
                 <svg
-                  className="w-4 h-4 text-white/60 hover:text-white"
+                  className="w-4 h-4 text-foreground/60 hover:text-foreground transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -397,14 +397,14 @@ export function Sidebar({
               )}
             </button>
           </div>
-          <div className="space-y-1">
-            <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
+          <div className="space-y-1.5">
+            <div className="relative h-2 bg-white/[0.08] rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-white/40 to-white/60 rounded-full transition-all"
+                className="h-full bg-gradient-to-r from-primary/60 to-primary/80 rounded-full transition-all shadow-sm"
                 style={{ width: `${(messagesUsed / messagesLimit) * 100}%` }}
               ></div>
             </div>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-foreground/60">
               {messagesLimit - messagesUsed} sur {messagesLimit} restants
             </p>
           </div>

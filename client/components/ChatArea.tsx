@@ -613,10 +613,10 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
 
       {/* Message Input Area - Fixed at Bottom */}
       <div
-        className="w-full px-6 md:px-8 py-6 animate-slideUp border-t"
+        className="w-full px-6 md:px-8 py-6 animate-slideUp border-t transition-colors duration-300"
         style={{
-          borderColor: "rgba(255, 255, 255, 0.08)",
-          backgroundColor: "#0e0e0e",
+          borderColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
+          backgroundColor: isDark ? "#0e0e0e" : "#F3F4F6",
         }}
       >
         <div className="flex flex-col items-center w-full">

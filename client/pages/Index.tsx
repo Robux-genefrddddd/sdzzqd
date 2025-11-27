@@ -17,7 +17,6 @@ export default function Index() {
   const { loading, userBan, maintenanceNotice, user, userData } = useAuth();
   const { isDark } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [acknowledgedMaintenance, setAcknowledgedMaintenance] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<string>();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(
     userData?.disclaimerAccepted || false,

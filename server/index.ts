@@ -15,6 +15,12 @@ import {
   handleDeleteUser,
 } from "./routes/admin";
 import {
+  handleCheckIPBan,
+  handleCheckIPLimit,
+  handleRecordUserIP,
+  handleUpdateUserIPLogin,
+} from "./routes/ip-management";
+import {
   validateContentType,
   validateRequestSize,
   validateInput,
@@ -85,6 +91,12 @@ export function createServer() {
   // IP detection routes
   apiRouter.get("/get-ip", handleGetIP);
   apiRouter.post("/check-vpn", handleCheckVPN);
+
+  // IP management routes
+  apiRouter.post("/check-ip-ban", handleCheckIPBan);
+  apiRouter.post("/check-ip-limit", handleCheckIPLimit);
+  apiRouter.post("/record-user-ip", handleRecordUserIP);
+  apiRouter.post("/update-user-ip-login", handleUpdateUserIPLogin);
 
   // License activation route
   apiRouter.post("/activate-license", handleActivateLicense);

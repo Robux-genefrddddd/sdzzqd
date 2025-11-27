@@ -43,9 +43,6 @@ export default function AdminBanManagement({ users }: AdminBanManagementProps) {
       setLoading(true);
       const allBans = await SystemNoticesService.getAllBans();
       setBans(allBans);
-
-      const allIPBans = await IPService.getAllIPBans();
-      setIPBans(allIPBans);
     } catch (error) {
       console.error("Error loading bans:", error);
       toast.error("Erreur lors du chargement des bans");

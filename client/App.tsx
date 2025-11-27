@@ -14,6 +14,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { TOSProvider, useTOS } from "@/contexts/TOSContext";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -23,6 +24,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import { BanModal } from "@/components/BanModal";
+import TOSModal from "@/components/TOSModal";
 
 const queryClient = new QueryClient();
 

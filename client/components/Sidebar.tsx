@@ -213,15 +213,15 @@ export function Sidebar({
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 w-56 sm:w-64 bg-sidebar border-r border-border flex flex-col transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 w-56 sm:w-64 bg-sidebar border-r-2 border-white/20 flex flex-col transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } z-50 animate-slideInLeft`}
+        } z-50 animate-slideInLeft shadow-2xl shadow-black/50`}
       >
         {/* Header - Minimal */}
-        <div className="p-3 sm:p-4 animate-fadeIn border-b border-border">
+        <div className="p-3 sm:p-4 animate-fadeIn">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-xs sm:text-sm font-bold hover:scale-110 transition-transform flex-shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-foreground rounded-full flex items-center justify-center text-background text-xs sm:text-sm font-bold border-2 border-white hover:scale-110 transition-transform flex-shrink-0">
                 {userInitial}
               </div>
               <div className="hidden sm:block min-w-0">
@@ -230,10 +230,10 @@ export function Sidebar({
                     {loading ? "..." : userData?.displayName || "Utilisateur"}
                   </p>
                   {userData?.isAdmin && (
-                    <Shield size={14} className="text-destructive" title="Admin" />
+                    <Shield size={14} className="text-red-500" title="Admin" />
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground font-medium">
+                <p className="text-xs text-white/50 font-medium">
                   {loading ? "..." : userData?.plan || "Free"}
                 </p>
               </div>
@@ -241,7 +241,7 @@ export function Sidebar({
             <div className="flex items-center gap-2">
               <button
                 onClick={onClose}
-                className="p-1.5 hover:bg-secondary rounded-lg transition-colors text-muted-foreground hover:text-foreground"
+                className="p-1.5 hover:bg-white/10 rounded-lg transition-colors text-foreground/70 hover:text-foreground"
                 aria-label="Fermer le menu"
                 title="Fermer le menu"
               >

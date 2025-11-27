@@ -79,7 +79,7 @@ function CodeBlockWithCopy({
       </div>
       <pre className="p-4 overflow-x-auto">
         <code
-          className={`font-mono text-sm leading-[1.55] whitespace-pre transition-colors duration-300 ${
+          className={`font-mono text-sm leading-tight whitespace-pre transition-colors duration-300 ${
             isDark ? "text-white/90" : "text-[#1A1A1A]/90"
           }`}
         >
@@ -370,11 +370,12 @@ function parseInlineMarkdown(text: string, isDark: boolean): ReactNode[] {
         parts.push(
           <code
             key={idx}
-            className={`px-2 py-1 rounded font-mono text-sm border font-semibold transition-all duration-300 ${
+            className={`px-1.5 py-0.5 rounded font-mono text-sm border font-semibold transition-all duration-300 ${
               isDark
                 ? "bg-white/15 text-orange-300 border-white/10"
                 : "bg-orange-100/50 text-orange-700 border-orange-200"
             }`}
+            style={{ margin: 0 }}
           >
             {escapeHtml(m.content)}
           </code>,

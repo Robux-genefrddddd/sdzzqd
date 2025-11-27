@@ -229,7 +229,7 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
         </div>
 
         {/* Sticky Footer with Buttons */}
-        <div className="border-t border-white/[0.08] px-6 py-4 space-y-3 bg-card/50 backdrop-blur-sm">
+        <div className="border-t border-white/[0.06] px-6 py-4 space-y-2.5 bg-[#0a0a0a]/50 backdrop-blur-sm">
           <button
             onClick={handleSaveChanges}
             disabled={!hasChanges || isSaving}

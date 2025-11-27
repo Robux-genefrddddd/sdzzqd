@@ -55,6 +55,7 @@ export function Sidebar({
   onConversationSelect,
 }: SidebarProps) {
   const { user, userData, loading } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loadingConversations, setLoadingConversations] = useState(true);

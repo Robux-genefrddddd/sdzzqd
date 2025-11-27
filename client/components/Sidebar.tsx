@@ -488,17 +488,29 @@ export function Sidebar({
             <button
               onClick={handleSyncMessages}
               disabled={isSyncing}
-              className="p-1.5 hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50 hover:-translate-y-0.5"
+              className={`p-1.5 rounded-lg transition-all disabled:opacity-50 hover:-translate-y-0.5 ${
+                isDark
+                  ? "hover:bg-white/10"
+                  : "hover:bg-black/[0.08]"
+              }`}
               title="Synchroniser"
             >
               {isSyncing ? (
                 <Loader2
                   size={14}
-                  className="animate-spin text-foreground/60"
+                  className={`animate-spin transition-colors duration-300 ${
+                    isDark
+                      ? "text-foreground/60"
+                      : "text-[#3F3F3F]/60"
+                  }`}
                 />
               ) : (
                 <svg
-                  className="w-4 h-4 text-foreground/60 hover:text-foreground transition-colors"
+                  className={`w-4 h-4 transition-colors duration-300 ${
+                    isDark
+                      ? "text-foreground/60 hover:text-foreground"
+                      : "text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                  }`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

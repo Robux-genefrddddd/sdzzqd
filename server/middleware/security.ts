@@ -96,7 +96,7 @@ export function validateInput(req: Request, res: Response, next: NextFunction) {
 
 /**
  * Server-side rate limiting using in-memory store.
- * Tracks requests per user ID (from JWT) and per IP address.
+ * Tracks requests per user ID (from JWT) with priority, falls back to IP address.
  * For production, use Redis or similar persistent store.
  */
 const rateLimitStore = new Map<string, Array<{ timestamp: number }>>();
@@ -106,15 +106,26 @@ export function serverRateLimit(
   maxRequests: number = 100,
 ) {
   return (req: Request, res: Response, next: NextFunction) => {
-    // Prefer user ID from JWT (if authenticated), fallback to IP
-    const userIdentifier =
-      (req as any).userId ||
-      (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
-      req.ip ||
-      req.socket.remoteAddress ||
-      "unknown";
+    // Priority: use decoded UID > use IP address
+    let userIdentifier: string;
 
-    const key = `${userIdentifier}:${req.path}`;
+    if ((req as any).decodedUid) {
+      // User is authenticated, use their UID for rate limiting
+      userIdentifier = `uid:${(req as any).decodedUid}`;
+    } else if ((req as any).userId) {
+      // Fallback to userId if available
+      userIdentifier = `uid:${(req as any).userId}`;
+    } else {
+      // Fall back to IP address for unauthenticated requests
+      userIdentifier =
+        `ip:${(req.headers["x-forwarded-for"] as string)?.split(",")[0]}` ||
+        `ip:${req.headers["x-real-ip"]}` ||
+        `ip:${req.ip}` ||
+        `ip:${req.socket.remoteAddress}` ||
+        "unknown";
+    }
+
+    const key = `ratelimit:${userIdentifier}:${req.path}`;
     const now = Date.now();
 
     // Initialize or get existing request timestamps
@@ -149,6 +160,7 @@ export function serverRateLimit(
 
 /**
  * Authentication middleware - extracts and validates JWT token from request.
+ * Decodes JWT claims without verifying signature (signature verified later by routes).
  */
 export function authMiddleware(
   req: Request,
@@ -162,14 +174,32 @@ export function authMiddleware(
       : null);
 
   if (!idToken) {
-    // Store null userId and continue (route handlers will check for auth)
+    // Store null and continue (route handlers will check for auth)
     (req as any).idToken = null;
-    (req as any).userId = null;
+    (req as any).decodedUid = null;
     return next();
   }
 
   // Store token on request for later verification
   (req as any).idToken = idToken;
+
+  // Try to extract UID from JWT for rate limiting purposes
+  // This is not a security verification - the actual route will verify the signature
+  try {
+    // Firebase JWT format: header.payload.signature
+    const parts = idToken.split(".");
+    if (parts.length === 3) {
+      const payload = JSON.parse(
+        Buffer.from(parts[1], "base64").toString("utf-8"),
+      );
+      if (payload.uid) {
+        (req as any).decodedUid = payload.uid;
+      }
+    }
+  } catch (error) {
+    // If parsing fails, just continue - signature verification will catch invalid tokens
+  }
+
   next();
 }
 

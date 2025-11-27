@@ -2,16 +2,7 @@
  * Security utilities for input validation, sanitization, and output encoding.
  * Prevents XSS, injection attacks, and other security vulnerabilities.
  */
-
-// HTML entities map for encoding
-const HTML_ENTITIES: Record<string, string> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#x27;",
-  "/": "&#x2F;",
-};
+import DOMPurify from "dompurify";
 
 /**
  * Escape HTML special characters to prevent XSS attacks.
@@ -19,7 +10,8 @@ const HTML_ENTITIES: Record<string, string> = {
  */
 export function escapeHtml(text: string): string {
   if (!text || typeof text !== "string") return "";
-  return text.replace(/[&<>"'\/]/g, (char) => HTML_ENTITIES[char] || char);
+  // Use DOMPurify for safe HTML escaping
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
 }
 
 /**
@@ -38,16 +30,12 @@ export function sanitizeInput(input: string): string {
   // Remove control characters (except newlines and tabs)
   sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
 
-  // Remove script tags and event handlers
-  sanitized = sanitized.replace(/<script[^>]*>.*?<\/script>/gi, "");
-  sanitized = sanitized.replace(/on\w+\s*=\s*["'][^"']*["']/gi, "");
-  sanitized = sanitized.replace(/on\w+\s*=\s*[^\s>]*/gi, "");
-
-  // Remove iframe tags
-  sanitized = sanitized.replace(/<iframe[^>]*>.*?<\/iframe>/gi, "");
-
-  // Remove object/embed tags
-  sanitized = sanitized.replace(/<(object|embed)[^>]*>/gi, "");
+  // Use DOMPurify to remove all dangerous HTML tags and attributes
+  // ALLOWED_TAGS: [] prevents any HTML tags from being kept
+  sanitized = DOMPurify.sanitize(sanitized, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+  });
 
   return sanitized;
 }

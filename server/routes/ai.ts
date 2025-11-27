@@ -210,10 +210,19 @@ export const handleUpdateAIConfig: RequestHandler = async (req, res) => {
   try {
     const { idToken, model, temperature, maxTokens } = req.body;
 
-    // Validate idToken
-    if (!idToken || typeof idToken !== "string") {
+    // Validate idToken with Zod
+    const IdTokenSchema = z
+      .string()
+      .min(10)
+      .max(3000)
+      .regex(/^[A-Za-z0-9_\-\.]+$/, "Invalid token format");
+
+    let validatedIdToken: string;
+    try {
+      validatedIdToken = IdTokenSchema.parse(idToken);
+    } catch (error) {
       return res.status(400).json({
-        error: "Invalid token",
+        error: "Invalid token format",
       });
     }
 
@@ -221,10 +230,10 @@ export const handleUpdateAIConfig: RequestHandler = async (req, res) => {
     const auth = getAdminAuth();
     let decoded;
     try {
-      decoded = await auth.verifyIdToken(idToken);
+      decoded = await auth.verifyIdToken(validatedIdToken);
     } catch (error) {
       return res.status(401).json({
-        error: "Unauthorized: Invalid token",
+        error: "Unauthorized: Invalid or expired token",
       });
     }
 
@@ -237,26 +246,46 @@ export const handleUpdateAIConfig: RequestHandler = async (req, res) => {
       });
     }
 
-    // Update config
+    // Validate and build update data
     const updateData: Record<string, any> = {};
-    if (model && typeof model === "string") {
-      updateData.model = model;
+
+    if (model !== undefined) {
+      const modelSchema = z.enum([
+        "x-ai/grok-4.1-fast:free",
+        "gpt-4",
+        "gpt-3.5-turbo",
+        "claude-3-opus",
+        "claude-3-sonnet",
+      ]);
+      try {
+        updateData.model = modelSchema.parse(model);
+      } catch {
+        return res.status(400).json({
+          error: "Invalid model specified",
+        });
+      }
     }
-    if (
-      temperature !== undefined &&
-      typeof temperature === "number" &&
-      temperature >= 0 &&
-      temperature <= 2
-    ) {
-      updateData.temperature = temperature;
+
+    if (temperature !== undefined) {
+      const tempSchema = z.number().min(0).max(2);
+      try {
+        updateData.temperature = tempSchema.parse(temperature);
+      } catch {
+        return res.status(400).json({
+          error: "Invalid temperature (must be 0-2)",
+        });
+      }
     }
-    if (
-      maxTokens !== undefined &&
-      typeof maxTokens === "number" &&
-      maxTokens >= 1 &&
-      maxTokens <= 4096
-    ) {
-      updateData.maxTokens = maxTokens;
+
+    if (maxTokens !== undefined) {
+      const tokensSchema = z.number().int().min(1).max(4096);
+      try {
+        updateData.maxTokens = tokensSchema.parse(maxTokens);
+      } catch {
+        return res.status(400).json({
+          error: "Invalid maxTokens (must be 1-4096)",
+        });
+      }
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -276,6 +305,12 @@ export const handleUpdateAIConfig: RequestHandler = async (req, res) => {
       config: updateData,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid request body",
+        details: error.errors,
+      });
+    }
     console.error("Update AI config error:", error);
     return res.status(500).json({
       error: "Failed to update AI config",

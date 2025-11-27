@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { z } from "zod";
 import {
   getAdminDb,
   initializeFirebaseAdmin,
@@ -8,6 +9,42 @@ import { Timestamp } from "firebase-admin/firestore";
 
 // Initialize Firebase Admin on module load
 initializeFirebaseAdmin();
+
+/**
+ * Validation schemas for IP management endpoints
+ */
+const IPAddressSchema = z
+  .string()
+  .ip({ version: "v4" })
+  .or(z.string().ip({ version: "v6" }));
+
+const CheckIPBanSchema = z.object({
+  ipAddress: IPAddressSchema,
+});
+
+const CheckIPLimitSchema = z.object({
+  ipAddress: IPAddressSchema,
+  maxAccounts: z.number().int().min(1).max(10),
+});
+
+const RecordUserIPSchema = z.object({
+  userId: z
+    .string()
+    .min(20)
+    .max(40)
+    .regex(/^[a-zA-Z0-9]{20,40}$/),
+  ipAddress: IPAddressSchema,
+  email: z.string().email().optional(),
+});
+
+const UpdateUserIPLoginSchema = z.object({
+  userId: z
+    .string()
+    .min(20)
+    .max(40)
+    .regex(/^[a-zA-Z0-9]{20,40}$/),
+  ipAddress: IPAddressSchema,
+});
 
 export interface IPBan {
   id: string;
@@ -28,26 +65,21 @@ export interface UserIP {
 
 export const handleCheckIPBan: RequestHandler = async (req, res) => {
   try {
-    const { ipAddress } = req.body;
-
-    if (!ipAddress) {
-      res.status(400).json({ error: "IP address required" });
-      return;
-    }
+    // Validate input
+    const validated = CheckIPBanSchema.parse(req.body);
+    const { ipAddress } = validated;
 
     // If Firebase Admin is not initialized, return no ban
     if (!isAdminInitialized()) {
       console.warn(
         "Firebase Admin not initialized. Set FIREBASE_SERVICE_ACCOUNT_KEY env var for IP ban checking.",
       );
-      res.json({ banned: false });
-      return;
+      return res.json({ banned: false });
     }
 
     const db = getAdminDb();
     if (!db) {
-      res.json({ banned: false });
-      return;
+      return res.json({ banned: false });
     }
 
     const snapshot = await db
@@ -56,8 +88,7 @@ export const handleCheckIPBan: RequestHandler = async (req, res) => {
       .get();
 
     if (snapshot.empty) {
-      res.json({ banned: false });
-      return;
+      return res.json({ banned: false });
     }
 
     const banDoc = snapshot.docs[0];
@@ -69,52 +100,52 @@ export const handleCheckIPBan: RequestHandler = async (req, res) => {
       if (new Date() > expiresAt) {
         // Ban has expired, delete it
         await banDoc.ref.delete();
-        res.json({ banned: false });
-        return;
+        return res.json({ banned: false });
       }
     }
 
-    res.json({
+    return res.json({
       banned: true,
       reason: banData.reason,
       expiresAt: banData.expiresAt ? banData.expiresAt.toDate() : null,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid IP address format",
+        details: error.errors,
+      });
+    }
     console.error("Error checking IP ban:", error);
-    res.status(500).json({ error: "Failed to check IP ban" });
+    return res.status(500).json({ error: "Failed to check IP ban" });
   }
 };
 
 export const handleCheckIPLimit: RequestHandler = async (req, res) => {
   try {
-    const { ipAddress, maxAccounts } = req.body;
-
-    if (!ipAddress || !maxAccounts) {
-      res.status(400).json({ error: "IP address and maxAccounts required" });
-      return;
-    }
+    // Validate input
+    const validated = CheckIPLimitSchema.parse(req.body);
+    const { ipAddress, maxAccounts } = validated;
 
     // If Firebase Admin is not initialized, return no limit exceeded
     if (!isAdminInitialized()) {
       console.warn(
         "Firebase Admin not initialized. Set FIREBASE_SERVICE_ACCOUNT_KEY env var for IP limit checking.",
       );
-      res.json({
+      return res.json({
         accountCount: 0,
         maxAccounts,
         isLimitExceeded: false,
       });
-      return;
     }
 
     const db = getAdminDb();
     if (!db) {
-      res.json({
+      return res.json({
         accountCount: 0,
         maxAccounts,
         isLimitExceeded: false,
       });
-      return;
     }
 
     const snapshot = await db
@@ -125,39 +156,40 @@ export const handleCheckIPLimit: RequestHandler = async (req, res) => {
     const accountCount = snapshot.size;
     const isLimitExceeded = accountCount >= maxAccounts;
 
-    res.json({
+    return res.json({
       accountCount,
       maxAccounts,
       isLimitExceeded,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid request parameters",
+        details: error.errors,
+      });
+    }
     console.error("Error checking IP limit:", error);
-    res.status(500).json({ error: "Failed to check IP limit" });
+    return res.status(500).json({ error: "Failed to check IP limit" });
   }
 };
 
 export const handleRecordUserIP: RequestHandler = async (req, res) => {
   try {
-    const { userId, email, ipAddress } = req.body;
-
-    if (!userId || !ipAddress) {
-      res.status(400).json({ error: "userId and ipAddress required" });
-      return;
-    }
+    // Validate input
+    const validated = RecordUserIPSchema.parse(req.body);
+    const { userId, email, ipAddress } = validated;
 
     // If Firebase Admin is not initialized, skip recording
     if (!isAdminInitialized()) {
       console.warn(
         "Firebase Admin not initialized. Skipping IP recording. Set FIREBASE_SERVICE_ACCOUNT_KEY env var.",
       );
-      res.json({ success: true, ipId: "pending-initialization" });
-      return;
+      return res.json({ success: true, ipId: "pending-initialization" });
     }
 
     const db = getAdminDb();
     if (!db) {
-      res.json({ success: true, ipId: "pending-initialization" });
-      return;
+      return res.json({ success: true, ipId: "pending-initialization" });
     }
 
     const now = Timestamp.now();
@@ -170,35 +202,36 @@ export const handleRecordUserIP: RequestHandler = async (req, res) => {
       lastUsed: now,
     });
 
-    res.json({ success: true, ipId: docRef.id });
+    return res.json({ success: true, ipId: docRef.id });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid request parameters",
+        details: error.errors,
+      });
+    }
     console.error("Error recording user IP:", error);
-    res.status(500).json({ error: "Failed to record IP" });
+    return res.status(500).json({ error: "Failed to record IP" });
   }
 };
 
 export const handleUpdateUserIPLogin: RequestHandler = async (req, res) => {
   try {
-    const { userId, ipAddress } = req.body;
-
-    if (!userId || !ipAddress) {
-      res.status(400).json({ error: "userId and ipAddress required" });
-      return;
-    }
+    // Validate input
+    const validated = UpdateUserIPLoginSchema.parse(req.body);
+    const { userId, ipAddress } = validated;
 
     // If Firebase Admin is not initialized, skip updating
     if (!isAdminInitialized()) {
       console.warn(
         "Firebase Admin not initialized. Skipping IP login update. Set FIREBASE_SERVICE_ACCOUNT_KEY env var.",
       );
-      res.json({ success: true });
-      return;
+      return res.json({ success: true });
     }
 
     const db = getAdminDb();
     if (!db) {
-      res.json({ success: true });
-      return;
+      return res.json({ success: true });
     }
 
     const snapshot = await db
@@ -228,9 +261,15 @@ export const handleUpdateUserIPLogin: RequestHandler = async (req, res) => {
       });
     }
 
-    res.json({ success: true });
+    return res.json({ success: true });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        error: "Invalid request parameters",
+        details: error.errors,
+      });
+    }
     console.error("Error updating user IP login:", error);
-    res.status(500).json({ error: "Failed to update IP login" });
+    return res.status(500).json({ error: "Failed to update IP login" });
   }
 };

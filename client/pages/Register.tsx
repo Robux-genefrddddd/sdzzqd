@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { PlanType, UserData } from "@/contexts/AuthContext";
-import { Mail, Lock, UserPlus, Key, AlertCircle } from "lucide-react";
+import { Mail, Lock, Key } from "lucide-react";
 import { toast } from "sonner";
 import { IPService } from "@/lib/ip-service";
 
@@ -190,135 +190,296 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/80 flex items-center justify-center p-4">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-[#0a0a0a]">
+      {/* Premium Background with Gradient + Blur + Noise */}
+      <div className="absolute inset-0 z-0">
+        {/* Radial gradient spotlight effect */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 50%)",
+          }}
+        />
+
+        {/* Subtle noise texture */}
+        <div
+          className="absolute inset-0 opacity-[0.015]"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml,%3Csvg width=%27100%27 height=%27100%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noise%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.9%27 numOctaves=%274%27 seed=%272%27 /%3E%3C/filter%3E%3Crect width=%27100%27 height=%27100%27 filter=%27url(%23noise)%27 opacity=%271%27/%3E%3C/svg%3E')",
+          }}
+        />
+
+        {/* Animated gradient blobs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl opacity-40" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/10 to-transparent rounded-full blur-3xl opacity-40" />
       </div>
 
-      <div className="relative w-full max-w-md">
-        {/* Header */}
+      {/* Main Content Container */}
+      <div className="relative z-10 w-full max-w-[460px]">
+        {/* Header Section with Logo and Title */}
         <div className="text-center mb-8 animate-fadeIn">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border-2 border-white/30">
-              <UserPlus size={24} className="text-white" />
+          {/* Logo - Minimalist Circle Neon Soft */}
+          <div className="flex justify-center mb-6">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl relative"
+              style={{
+                background: "rgba(59, 130, 246, 0.1)",
+                border: "2px solid rgba(59, 130, 246, 0.4)",
+                boxShadow: "0 0 16px rgba(59, 130, 246, 0.2)",
+              }}
+            >
+              <span className="text-blue-400">VA</span>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">
+
+          {/* Main Title */}
+          <h1
+            className="text-[28px] font-semibold text-white mb-3"
+            style={{ letterSpacing: "-0.5px" }}
+          >
             Créez votre compte
           </h1>
-          <p className="text-foreground/60">Inscrivez-vous pour commencer</p>
+
+          {/* Tagline */}
+          <p className="text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
+            Rejoignez VanIA et explorez l'intelligence artificielle de nouvelle
+            génération.
+          </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleRegister} className="space-y-4 animate-slideUp">
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Email
-            </label>
-            <div className="relative">
-              <Mail
-                size={18}
-                className="absolute left-3 top-3 text-foreground/40"
-              />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-4 py-3 text-white placeholder-foreground/40 focus:outline-none focus:border-white/60 transition-colors"
-                required
-              />
+        {/* Premium Card Container */}
+        <div
+          className="rounded-2xl p-10 animate-slideUp"
+          style={{
+            background: "rgba(17, 17, 17, 0.6)",
+            backdropFilter: "blur(14px)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+          }}
+        >
+          {/* Form */}
+          <form onSubmit={handleRegister} className="space-y-5">
+            {/* Email Field */}
+            <div className="group">
+              <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
+                Email
+              </label>
+              <div
+                className="relative rounded-2xl transition-all duration-200 flex items-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.07)",
+                  boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 12px rgba(59, 130, 246, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                }}
+              >
+                <Mail
+                  size={18}
+                  className="absolute left-4 text-gray-500 pointer-events-none"
+                />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="votre@email.com"
+                  className="w-full bg-transparent pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium"
+                  required
+                />
+              </div>
             </div>
+
+            {/* Password Field */}
+            <div className="group">
+              <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
+                Mot de passe
+              </label>
+              <div
+                className="relative rounded-2xl transition-all duration-200 flex items-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.07)",
+                  boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 12px rgba(59, 130, 246, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                }}
+              >
+                <Lock
+                  size={18}
+                  className="absolute left-4 text-gray-500 pointer-events-none"
+                />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-transparent pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Confirm Password Field */}
+            <div className="group">
+              <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
+                Confirmer le mot de passe
+              </label>
+              <div
+                className="relative rounded-2xl transition-all duration-200 flex items-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.07)",
+                  boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 12px rgba(59, 130, 246, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                }}
+              >
+                <Lock
+                  size={18}
+                  className="absolute left-4 text-gray-500 pointer-events-none"
+                />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-transparent pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* License Key Field - Optional */}
+            <div className="group">
+              <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
+                Clé de licence{" "}
+                <span className="text-gray-600">(optionnel)</span>
+              </label>
+              <div
+                className="relative rounded-2xl transition-all duration-200 flex items-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid rgba(255, 255, 255, 0.07)",
+                  boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
+                }}
+                onFocus={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 12px rgba(59, 130, 246, 0.2)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                }}
+              >
+                <Key
+                  size={18}
+                  className="absolute left-4 text-gray-500 pointer-events-none"
+                />
+                <input
+                  type="text"
+                  value={licenseKey}
+                  onChange={(e) => setLicenseKey(e.target.value)}
+                  placeholder="Entrez votre clé de licence"
+                  className="w-full bg-transparent pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium"
+                />
+              </div>
+              <p className="text-xs text-gray-600 mt-2">
+                Si vous n'avez pas de clé, un compte gratuit sera créé
+              </p>
+            </div>
+
+            {/* Register Button - SaaS Pro Style */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-8 rounded-2xl py-3.5 font-semibold text-white text-sm relative overflow-hidden group transition-all duration-200"
+              style={{
+                background: loading
+                  ? "rgba(59, 130, 246, 0.5)"
+                  : "linear-gradient(135deg, #1f2937 0%, #111827 100%)",
+                boxShadow: loading
+                  ? "0 4px 12px rgba(59, 130, 246, 0.2)"
+                  : "0 8px 16px rgba(0, 0, 0, 0.3)",
+              }}
+              onMouseEnter={(e) => {
+                if (!loading) {
+                  (e.currentTarget as HTMLButtonElement).style.transform =
+                    "scale(0.98)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+              }}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Inscription en cours...
+                </span>
+              ) : (
+                "Créer un compte"
+              )}
+            </button>
+          </form>
+
+          {/* Divider */}
+          <div className="my-6 flex items-center gap-3">
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <span className="text-xs text-gray-600">OU</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Mot de passe
-            </label>
-            <div className="relative">
-              <Lock
-                size={18}
-                className="absolute left-3 top-3 text-foreground/40"
-              />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-4 py-3 text-white placeholder-foreground/40 focus:outline-none focus:border-white/60 transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Confirmer le mot de passe
-            </label>
-            <div className="relative">
-              <Lock
-                size={18}
-                className="absolute left-3 top-3 text-foreground/40"
-              />
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-4 py-3 text-white placeholder-foreground/40 focus:outline-none focus:border-white/60 transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          {/* License Key */}
-          <div>
-            <label className="block text-sm font-medium text-foreground mb-2">
-              Clé de licence (optionnel)
-            </label>
-            <div className="relative">
-              <Key
-                size={18}
-                className="absolute left-3 top-3 text-foreground/40"
-              />
-              <input
-                type="text"
-                value={licenseKey}
-                onChange={(e) => setLicenseKey(e.target.value)}
-                placeholder="Entrez votre clé de licence"
-                className="w-full bg-white/5 border border-white/20 rounded-lg pl-10 pr-4 py-3 text-white placeholder-foreground/40 focus:outline-none focus:border-white/60 transition-colors"
-              />
-            </div>
-            <p className="text-xs text-foreground/50 mt-1">
-              Si vous n'avez pas de clé, un compte gratuit sera créé
+          {/* Login Link */}
+          <div className="text-center">
+            <p className="text-sm text-gray-500 mb-3">
+              Vous avez déjà un compte?
             </p>
+            <Link
+              to="/login"
+              className="inline-block px-6 py-2.5 rounded-2xl text-white text-sm font-medium transition-all duration-200"
+              style={{
+                background: "rgba(255, 255, 255, 0.08)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              }}
+            >
+              Se Connecter
+            </Link>
           </div>
+        </div>
 
-          {/* Register Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-white/20 hover:bg-white/30 disabled:opacity-50 text-white font-semibold py-3 rounded-lg transition-all border border-white/40 hover:border-white/60 mt-6"
-          >
-            {loading ? "Inscription en cours..." : "Créer un compte"}
-          </button>
-        </form>
-
-        {/* Login Link */}
-        <div className="text-center mt-6">
-          <p className="text-foreground/60 text-sm mb-3">
-            Vous avez déjà un compte?
-          </p>
-          <Link
-            to="/login"
-            className="inline-block px-6 py-3 border border-white/40 rounded-lg text-white hover:bg-white/10 transition-all text-sm font-medium"
-          >
-            Se Connecter
-          </Link>
+        {/* Footer */}
+        <div className="text-center mt-8 text-xs text-gray-600 animate-fadeIn">
+          © VanIA — Tous droits réservés
         </div>
       </div>
     </div>

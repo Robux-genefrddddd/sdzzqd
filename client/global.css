@@ -424,4 +424,17 @@
     background-color: rgb(31, 41, 55, 0.6);
     @apply border border-white/[0.08];
   }
+
+  /* Premium message input */
+  #message-input {
+    caret-color: #3b82f6;
+  }
+
+  #message-input::placeholder {
+    color: #8b8b8b;
+  }
+
+  .dark #message-input::placeholder {
+    color: #7a7a7a;
+  }
 }

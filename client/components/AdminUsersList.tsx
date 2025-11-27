@@ -115,13 +115,6 @@ export default function AdminUsersList({
     onWarnUser?.(user.email);
   };
 
-  const getIPStatusColor = (userIP: UserIP) => {
-    if (userIP.isVPN) {
-      return "text-red-400";
-    }
-    return "text-green-400";
-  };
-
   return (
     <div className="space-y-6">
       {/* Stats Cards */}

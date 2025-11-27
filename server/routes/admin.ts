@@ -1,60 +1,56 @@
 import { RequestHandler } from "express";
 import { z } from "zod";
-import { initializeApp, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
+import {
+  initializeFirebaseAdmin,
+  FirebaseAdminService,
+} from "../lib/firebase-admin";
 
-// Initialize Firebase Admin SDK (uses FIREBASE_SERVICE_ACCOUNT_KEY from env)
-let adminDb: ReturnType<typeof getFirestore>;
-let adminAuth: ReturnType<typeof getAuth>;
+// Initialize on first use
+initializeFirebaseAdmin();
 
-try {
-  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-    : null;
-
-  if (serviceAccount) {
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-    adminDb = getFirestore();
-    adminAuth = getAuth();
-  }
-} catch (error) {
-  console.error("Failed to initialize Firebase Admin:", error);
-}
-
-// Validation schemas
+// Validation schemas with strict constraints
 const VerifyAdminSchema = z.object({
-  idToken: z.string().min(1, "ID token required"),
-});
-
-const UpdateUserAdminSchema = z.object({
-  idToken: z.string().min(1, "ID token required"),
-  targetUserId: z.string().uuid().or(z.string().min(10)),
-  action: z.enum(["grant", "revoke"]),
+  idToken: z
+    .string()
+    .min(10)
+    .max(3000)
+    .regex(/^[A-Za-z0-9_\-\.]+$/, "Invalid token format"),
 });
 
 const BanUserSchema = z.object({
-  idToken: z.string().min(1, "ID token required"),
-  userId: z.string().uuid().or(z.string().min(10)),
-  reason: z.string().min(5).max(500),
-  duration: z.number().int().positive(),
+  idToken: z
+    .string()
+    .min(10)
+    .max(3000)
+    .regex(/^[A-Za-z0-9_\-\.]+$/, "Invalid token format"),
+  userId: z.string().min(10).max(100),
+  reason: z.string().min(5).max(500).trim(),
+  duration: z.number().int().min(1).max(36500),
 });
 
-// Verify Firebase ID token and check admin status
-async function verifyAdmin(idToken: string): Promise<string> {
-  if (!adminAuth) throw new Error("Admin SDK not initialized");
+const CreateLicenseSchema = z.object({
+  idToken: z
+    .string()
+    .min(10)
+    .max(3000)
+    .regex(/^[A-Za-z0-9_\-\.]+$/, "Invalid token format"),
+  plan: z.enum(["Free", "Classic", "Pro"]),
+  validityDays: z.number().int().min(1).max(3650),
+});
 
-  const decodedToken = await adminAuth.verifyIdToken(idToken);
-  const userDoc = await adminDb.collection("users").doc(decodedToken.uid).get();
-
-  if (!userDoc.exists || !userDoc.data()?.isAdmin) {
-    throw new Error("Unauthorized: Not an admin");
-  }
-
-  return decodedToken.uid;
-}
+const BanIPSchema = z.object({
+  idToken: z
+    .string()
+    .min(10)
+    .max(3000)
+    .regex(/^[A-Za-z0-9_\-\.]+$/, "Invalid token format"),
+  ipAddress: z
+    .string()
+    .ip({ version: "v4" })
+    .or(z.string().ip({ version: "v6" })),
+  reason: z.string().min(5).max(500).trim(),
+  duration: z.number().int().min(1).max(36500),
+});
 
 // Endpoint: Verify admin status
 export const handleVerifyAdmin: RequestHandler = async (req, res) => {

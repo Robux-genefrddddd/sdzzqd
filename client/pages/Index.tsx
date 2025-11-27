@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatArea } from "@/components/ChatArea";
 import { SystemNoticeModal } from "@/components/SystemNoticeModal";
 import { MessageLimitModal } from "@/components/MessageLimitModal";
+import { DisclaimerModal } from "@/components/DisclaimerModal";
 import { Menu, Loader2 } from "lucide-react";
 import { MessagesService } from "@/lib/messages";
+import { toast } from "sonner";
 
 export default function Index() {
   const { loading, userBan, maintenanceNotice, user, userData } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [acknowledgedMaintenance, setAcknowledgedMaintenance] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<string>();
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(
+    userData?.disclaimerAccepted || false,
+  );
 
   useEffect(() => {
     // Load first conversation if available
@@ -44,6 +50,33 @@ export default function Index() {
     }
   }, [userBan]);
 
+  useEffect(() => {
+    // Update disclaimer state when userData changes
+    if (userData?.disclaimerAccepted) {
+      setDisclaimerAccepted(true);
+    }
+  }, [userData?.disclaimerAccepted]);
+
+  const handleDisclaimerAccept = async () => {
+    try {
+      if (user?.uid) {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          disclaimerAccepted: true,
+          disclaimerAcceptedAt: Date.now(),
+        });
+        setDisclaimerAccepted(true);
+      }
+    } catch (error) {
+      console.error("Error accepting disclaimer:", error);
+      toast.error("Erreur lors de l'enregistrement du disclaimer");
+    }
+  };
+
+  const handleDisclaimerDecline = () => {
+    signOut(auth).catch(console.error);
+  };
+
   if (loading) {
     return (
       <div className="flex h-screen bg-background items-center justify-center">
@@ -73,6 +106,17 @@ export default function Index() {
       <MessageLimitModal
         messagesUsed={userData.messagesUsed}
         messagesLimit={userData.messagesLimit}
+      />
+    );
+  }
+
+  // Show disclaimer modal if not accepted
+  if (!disclaimerAccepted) {
+    return (
+      <DisclaimerModal
+        isOpen={true}
+        onAccept={handleDisclaimerAccept}
+        onDecline={handleDisclaimerDecline}
       />
     );
   }

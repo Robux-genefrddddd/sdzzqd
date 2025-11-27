@@ -14,7 +14,6 @@ import {
 import { toast } from "sonner";
 import { UserData } from "@/contexts/AuthContext";
 import { SystemNoticesService, UserBan } from "@/lib/system-notices";
-import { IPService } from "@/lib/ip-service";
 
 interface AdminBanManagementProps {
   users: UserData[];

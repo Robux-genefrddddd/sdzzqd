@@ -1,6 +1,5 @@
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import { ReactNode } from "react";
 
@@ -10,16 +9,13 @@ interface MessageRendererProps {
   isStreaming?: boolean;
 }
 
-function CodeBlock({
-  inline,
-  className,
-  children,
-  ...props
-}: {
+interface CodeBlockProps {
   inline?: boolean;
   className?: string;
-  children: ReactNode;
-} & any) {
+  children?: ReactNode;
+}
+
+function CodeBlock({ inline, className, children }: CodeBlockProps) {
   if (inline) {
     return (
       <code className="bg-white/10 px-2 py-1 rounded font-mono text-sm text-white/90">
@@ -69,22 +65,22 @@ export function MessageRenderer({
   }
 
   return (
-    <div className="prose prose-invert max-w-none">
+    <div className="text-white/90">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeHighlight]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           code: CodeBlock,
           p: ({ children }) => (
-            <p className="mb-3 text-white/90 leading-relaxed">{children}</p>
+            <p className="mb-3 leading-relaxed">{children}</p>
           ),
           ul: ({ children }) => (
-            <ul className="list-disc list-inside mb-3 text-white/90 space-y-1">
+            <ul className="list-disc list-inside mb-3 space-y-1">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-inside mb-3 text-white/90 space-y-1">
+            <ol className="list-decimal list-inside mb-3 space-y-1">
               {children}
             </ol>
           ),
@@ -94,13 +90,19 @@ export function MessageRenderer({
             </blockquote>
           ),
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold mb-3 text-white mt-4">{children}</h1>
+            <h1 className="text-2xl font-bold mb-3 text-white mt-4">
+              {children}
+            </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-xl font-bold mb-2 text-white mt-3">{children}</h2>
+            <h2 className="text-xl font-bold mb-2 text-white mt-3">
+              {children}
+            </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-lg font-bold mb-2 text-white mt-2">{children}</h3>
+            <h3 className="text-lg font-bold mb-2 text-white mt-2">
+              {children}
+            </h3>
           ),
           a: ({ href, children }) => (
             <a
@@ -114,16 +116,21 @@ export function MessageRenderer({
           ),
           table: ({ children }) => (
             <div className="overflow-x-auto my-3">
-              <table className="border-collapse border border-white/20">{children}</table>
+              <table className="border-collapse border border-white/20">
+                {children}
+              </table>
             </div>
           ),
+          thead: ({ children }) => <thead>{children}</thead>,
+          tbody: ({ children }) => <tbody>{children}</tbody>,
+          tr: ({ children }) => <tr>{children}</tr>,
           th: ({ children }) => (
             <th className="border border-white/20 px-4 py-2 bg-white/10 font-bold text-white">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="border border-white/20 px-4 py-2 text-white/90">
+            <td className="border border-white/20 px-4 py-2">
               {children}
             </td>
           ),

@@ -7,6 +7,7 @@ import {
 import { useState, useEffect } from "react";
 import { Moon, LogOut, Loader2, Sun } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { ProfilePhotoUpload } from "@/components/ProfilePhotoUpload";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";

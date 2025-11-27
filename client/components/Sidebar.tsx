@@ -552,12 +552,20 @@ export function Sidebar({
 
         {/* Footer - Sign Out */}
         <div
-          className="px-3 py-4 border-t border-white/[0.08] animate-fadeIn"
+          className={`px-3 py-4 border-t animate-fadeIn transition-all duration-300 ${
+            isDark
+              ? "border-white/[0.08]"
+              : "border-black/[0.08]"
+          }`}
           style={{ animationDelay: "0.3s" }}
         >
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-red-400/80 hover:text-red-400 border border-red-500/30 hover:border-red-500/50 hover:bg-red-500/10 transition-all text-xs font-medium rounded-lg hover:opacity-95 hover:-translate-y-px active:scale-95 shadow-sm hover:shadow-md"
+            className={`w-full flex items-center justify-center gap-2 px-3 py-2 border transition-all text-xs font-medium rounded-lg hover:opacity-95 hover:-translate-y-px active:scale-95 shadow-sm hover:shadow-md ${
+              isDark
+                ? "text-red-400/80 hover:text-red-400 border-red-500/30 hover:border-red-500/50 hover:bg-red-500/10"
+                : "text-red-600/80 hover:text-red-700 border-red-300/50 hover:border-red-400/50 hover:bg-red-100/50"
+            }`}
           >
             <LogOut size={16} />
             <span>Se déconnecter</span>

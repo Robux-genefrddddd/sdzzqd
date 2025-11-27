@@ -32,6 +32,14 @@ export function LicenseActivationModal({
 
     setLoading(true);
     try {
+      // Get idToken from Firebase Auth
+      const idToken = await user.getIdToken();
+      if (!idToken) {
+        toast.error("Erreur d'authentification");
+        setLoading(false);
+        return;
+      }
+
       // Call your license activation API
       const response = await fetch("/api/activate-license", {
         method: "POST",
@@ -39,6 +47,7 @@ export function LicenseActivationModal({
         body: JSON.stringify({
           licenseKey: licenseKey.trim(),
           userId: user.uid,
+          idToken,
         }),
       });
 

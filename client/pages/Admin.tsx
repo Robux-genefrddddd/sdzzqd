@@ -27,6 +27,8 @@ import {
   Clock,
   BarChart3,
   Plus,
+  ChevronRight,
+  Home,
 } from "lucide-react";
 import { toast } from "sonner";
 import { UserData, PlanType } from "@/contexts/AuthContext";
@@ -219,7 +221,6 @@ export default function Admin() {
 
     setSavingBan(true);
     try {
-      // Find user by email
       const user = users.find((u) => u.email === userEmailToBan);
       if (!user) {
         toast.error("Utilisateur non trouvé");
@@ -233,7 +234,7 @@ export default function Admin() {
         banDuration || undefined,
       );
 
-      toast.success("Utilisateur banni avec succ��s");
+      toast.success("Utilisateur banni avec succès");
       setUserEmailToBan("");
       setBanReason("");
       setBanDuration(null);
@@ -304,27 +305,100 @@ export default function Admin() {
 
   if (!userData?.isAdmin) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-white">Accès refusé</p>
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03), transparent 50%)",
+            }}
+          />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/5 to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/5 to-transparent rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative z-10 text-center">
+          <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
+          <h1 className="text-2xl font-bold text-white mb-2">Accès refusé</h1>
+          <p className="text-gray-400 mb-6">Vous n'avez pas les permissions administrateur</p>
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 mx-auto px-6 py-3 rounded-2xl font-semibold text-white"
+            style={{
+              background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+              boxShadow: "0 8px 16px rgba(59, 130, 246, 0.3)",
+            }}
+          >
+            <Home size={18} />
+            Retour à l'accueil
+          </button>
+        </div>
       </div>
     );
   }
 
+  const tabs = [
+    { id: "users", label: "Utilisateurs", icon: Users },
+    { id: "licenses", label: "Licences", icon: Key },
+    { id: "ai", label: "Configuration IA", icon: Brain },
+    { id: "system", label: "Système", icon: Shield },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Background Effects */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 20%, rgba(255,255,255,0.04), transparent 50%)",
+          }}
+        />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/8 to-transparent rounded-full blur-3xl opacity-40" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-500/8 to-transparent rounded-full blur-3xl opacity-40" />
+      </div>
+
       {/* Header */}
-      <div className="border-b border-white/10 bg-white/5 backdrop-blur">
+      <div className="relative z-10 border-b border-white/10 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center border border-white/30">
-                <Settings size={20} className="text-white" />
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate("/")}
+                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <Home size={20} className="text-gray-400 hover:text-white" />
+              </button>
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
+              >
+                <Shield size={24} className="text-blue-400" />
               </div>
-              <h1 className="text-2xl font-bold text-white">Panneau Admin</h1>
+              <div>
+                <h1 className="text-2xl font-bold text-white">Panneau Admin</h1>
+                <p className="text-xs text-gray-500">Gestion complète de la plateforme</p>
+              </div>
             </div>
+
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-foreground/70 hover:text-white border border-white/20 rounded-lg hover:bg-white/5 transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl font-medium text-sm transition-all duration-200"
+              style={{
+                background: "rgba(255, 255, 255, 0.08)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                color: "rgb(209, 213, 219)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.12)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              }}
             >
               <LogOut size={16} />
               Déconnexion
@@ -333,136 +407,130 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-white/10 bg-white/5 backdrop-blur">
+      {/* Navigation Tabs */}
+      <div className="relative z-10 border-b border-white/10 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab("users")}
-              className={`py-4 px-2 border-b-2 transition-all ${
-                activeTab === "users"
-                  ? "border-white text-white"
-                  : "border-transparent text-foreground/60 hover:text-foreground"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Users size={18} />
-                Utilisateurs
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("licenses")}
-              className={`py-4 px-2 border-b-2 transition-all ${
-                activeTab === "licenses"
-                  ? "border-white text-white"
-                  : "border-transparent text-foreground/60 hover:text-foreground"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Key size={18} />
-                Cl��s de licence
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("ai")}
-              className={`py-4 px-2 border-b-2 transition-all ${
-                activeTab === "ai"
-                  ? "border-white text-white"
-                  : "border-transparent text-foreground/60 hover:text-foreground"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Brain size={18} />
-                Configuration IA
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTab("system")}
-              className={`py-4 px-2 border-b-2 transition-all ${
-                activeTab === "system"
-                  ? "border-white text-white"
-                  : "border-transparent text-foreground/60 hover:text-foreground"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Shield size={18} />
-                Système
-              </div>
-            </button>
+          <div className="flex gap-1">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex items-center gap-2 px-4 py-4 font-medium text-sm transition-all duration-200 border-b-2 ${
+                    isActive
+                      ? "border-blue-500 text-white"
+                      : "border-transparent text-gray-400 hover:text-white"
+                  }`}
+                >
+                  <Icon size={18} />
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-8">
         {activeTab === "users" && (
-          <AdminUsersList
-            onBanUser={(email) => {
-              setUserEmailToBan(email);
-              setActiveTab("system");
-            }}
-            onWarnUser={(email) => {
-              setUserEmailToBan(email);
-              setActionType("warn");
-              setActiveTab("system");
-            }}
-          />
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">Gestion des utilisateurs</h2>
+              <p className="text-gray-400 text-sm">Gérez les comptes utilisateurs et les permissions</p>
+            </div>
+            <AdminUsersList
+              onBanUser={(email) => {
+                setUserEmailToBan(email);
+                setActiveTab("system");
+              }}
+              onWarnUser={(email) => {
+                setUserEmailToBan(email);
+                setActionType("warn");
+                setActiveTab("system");
+              }}
+            />
+          </div>
         )}
 
         {activeTab === "licenses" && (
-          <>
-            {/* Generate License Button */}
-            <div className="mb-8">
+          <div className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-white mb-2">Clés de licence</h2>
+                <p className="text-gray-400 text-sm">Générez et gérez les clés d'accès premium</p>
+              </div>
               <button
                 onClick={() => setShowGenerateLicenseModal(true)}
-                className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg border border-white/40 transition-all flex items-center gap-2"
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-200"
+                style={{
+                  background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                  color: "white",
+                  boxShadow: "0 8px 16px rgba(59, 130, 246, 0.3)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 12px 20px rgba(59, 130, 246, 0.4)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 8px 16px rgba(59, 130, 246, 0.3)";
+                }}
               >
-                <Plus size={20} />
-                Générer une nouvelle clé
+                <Plus size={18} />
+                Nouvelle clé
               </button>
             </div>
 
             {/* Licenses Table */}
-            <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{
+                background: "rgba(17, 17, 17, 0.6)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+              }}
+            >
               <div className="p-6 border-b border-white/10">
-                <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <Key size={20} />
-                  Clés générées ({licenses.length})
-                </h2>
+                <h3 className="font-semibold text-white flex items-center gap-2">
+                  <Key size={18} />
+                  Total: {licenses.length} clé(s)
+                </h3>
               </div>
 
               {loading ? (
-                <div className="p-8 text-center">
-                  <p className="text-foreground/60">Chargement des clés...</p>
+                <div className="p-12 text-center">
+                  <p className="text-gray-500">Chargement des clés...</p>
                 </div>
               ) : licenses.length === 0 ? (
-                <div className="p-8 text-center">
-                  <p className="text-foreground/60">Aucune clé générée</p>
+                <div className="p-12 text-center">
+                  <Key size={32} className="mx-auto text-gray-600 mb-3" />
+                  <p className="text-gray-500">Aucune clé générée</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="border-b border-white/10 bg-white/[0.02]">
                       <tr>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Clé
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Plan
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Statut
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Expire le
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Utilisée par
                         </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
-                          Date création
-                        </th>
-                        <th className="px-6 py-3 text-left text-sm font-semibold text-foreground/70">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">
                           Actions
                         </th>
                       </tr>
@@ -476,57 +544,40 @@ export default function Admin() {
                             className="border-b border-white/10 hover:bg-white/5 transition-colors"
                           >
                             <td className="px-6 py-4">
-                              <code className="text-white/80 text-sm font-mono bg-white/5 px-2 py-1 rounded">
+                              <code className="text-white/70 text-sm font-mono bg-white/5 px-3 py-1.5 rounded-lg">
                                 {license.key.substring(0, 20)}...
                               </code>
                             </td>
                             <td className="px-6 py-4">
-                              <span className="text-foreground/70">
-                                {license.plan}
-                              </span>
+                              <span className="text-gray-300 text-sm">{license.plan}</span>
                             </td>
                             <td className="px-6 py-4">
                               <span
-                                className={
+                                className={`px-3 py-1 rounded-lg text-xs font-semibold ${
                                   license.active
-                                    ? "text-green-400 font-semibold"
-                                    : "text-red-400 font-semibold"
-                                }
+                                    ? "bg-green-500/20 text-green-400"
+                                    : "bg-red-500/20 text-red-400"
+                                }`}
                               >
                                 {license.active ? "Active" : "Inactive"}
                               </span>
                             </td>
-                            <td className="px-6 py-4">
-                              <span className="text-foreground/70 text-sm">
-                                {license.expiresAt && !isNaN(license.expiresAt)
-                                  ? new Date(
-                                      license.expiresAt,
-                                    ).toLocaleDateString()
-                                  : "-"}
-                              </span>
+                            <td className="px-6 py-4 text-gray-400 text-sm">
+                              {license.expiresAt && !isNaN(license.expiresAt)
+                                ? new Date(license.expiresAt).toLocaleDateString()
+                                : "-"}
                             </td>
-                            <td className="px-6 py-4">
-                              <span className="text-foreground/70">
-                                {license.usedBy &&
-                                typeof license.usedBy === "string"
-                                  ? `${license.usedBy.substring(0, 8)}...`
-                                  : "-"}
-                              </span>
-                            </td>
-                            <td className="px-6 py-4">
-                              <span className="text-foreground/70 text-sm">
-                                {license.createdAt && !isNaN(license.createdAt)
-                                  ? new Date(
-                                      license.createdAt,
-                                    ).toLocaleDateString()
-                                  : "-"}
-                              </span>
+                            <td className="px-6 py-4 text-gray-400 text-sm">
+                              {license.usedBy &&
+                              typeof license.usedBy === "string"
+                                ? `${license.usedBy.substring(0, 8)}...`
+                                : "-"}
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => handleCopyLicense(license.key)}
-                                  className="p-2 bg-white/10 hover:bg-white/20 rounded text-white transition-colors"
+                                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                                   title="Copier"
                                 >
                                   <Copy size={16} />
@@ -536,7 +587,7 @@ export default function Admin() {
                                     onClick={() =>
                                       handleDeactivateLicense(license.key)
                                     }
-                                    className="p-2 bg-white/10 hover:bg-red-500/20 rounded text-white hover:text-red-400 transition-colors"
+                                    className="p-2 rounded-lg hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors"
                                     title="Désactiver"
                                   >
                                     <Trash2 size={16} />
@@ -551,24 +602,36 @@ export default function Admin() {
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === "ai" && (
-          <>
-            {/* AI Configuration Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Model and Temperature */}
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div className="space-y-6">
+            {/* Header */}
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">Configuration IA</h2>
+              <p className="text-gray-400 text-sm">Paramétrez le modèle et le comportement de l'IA</p>
+            </div>
+
+            {/* AI Config Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Model Parameters */}
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  background: "rgba(17, 17, 17, 0.6)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+                }}
+              >
                 <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                  <Brain size={20} />
+                  <Brain size={20} className="text-blue-400" />
                   Paramètres du modèle
                 </h3>
 
                 <div className="space-y-5">
-                  {/* Model Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
                       Modèle
                     </label>
                     <input
@@ -581,17 +644,13 @@ export default function Admin() {
                             : null,
                         )
                       }
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/40"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-colors"
                       placeholder="ex: x-ai/grok-4.1-fast:free"
                     />
-                    <p className="text-xs text-foreground/50 mt-2">
-                      Entrez le nom du modèle OpenRouter
-                    </p>
                   </div>
 
-                  {/* Temperature Slider */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-3 uppercase tracking-wide text-xs">
                       Température: {aiConfig?.temperature.toFixed(1)}
                     </label>
                     <input
@@ -610,16 +669,15 @@ export default function Admin() {
                             : null,
                         )
                       }
-                      className="w-full"
+                      className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-500"
                     />
-                    <p className="text-xs text-foreground/50 mt-1">
-                      0 = déterministe, 2 = très créatif
+                    <p className="text-xs text-gray-500 mt-2">
+                      0 = déterministe | 2 = très créatif
                     </p>
                   </div>
 
-                  {/* Max Tokens */}
                   <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
                       Tokens max
                     </label>
                     <input
@@ -637,67 +695,92 @@ export default function Admin() {
                             : null,
                         )
                       }
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-colors"
                     />
                   </div>
                 </div>
               </div>
 
               {/* System Prompt */}
-              <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  background: "rgba(17, 17, 17, 0.6)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+                }}
+              >
                 <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                  <Settings size={20} />
+                  <Settings size={20} className="text-purple-400" />
                   Prompt système
                 </h3>
 
-                <div className="space-y-5">
-                  {/* System Prompt */}
-                  <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
-                      Instructions de l'IA
-                    </label>
-                    <textarea
-                      value={aiConfig?.systemPrompt || ""}
-                      onChange={(e) =>
-                        setAiConfig(
-                          aiConfig
-                            ? { ...aiConfig, systemPrompt: e.target.value }
-                            : null,
-                        )
-                      }
-                      rows={7}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/40 resize-none"
-                      placeholder="Entrez les instructions pour l'IA..."
-                    />
-                    <p className="text-xs text-foreground/50 mt-2">
-                      Les instructions définissent le comportement et le style
-                      de l'IA
-                    </p>
-                  </div>
-                </div>
+                <textarea
+                  value={aiConfig?.systemPrompt || ""}
+                  onChange={(e) =>
+                    setAiConfig(
+                      aiConfig
+                        ? { ...aiConfig, systemPrompt: e.target.value }
+                        : null,
+                    )
+                  }
+                  rows={8}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
+                  placeholder="Entrez les instructions pour l'IA..."
+                />
               </div>
             </div>
 
             {/* Save Button */}
-            <div className="mt-8 flex justify-end">
+            <div className="flex justify-end">
               <button
                 onClick={handleSaveAiConfig}
                 disabled={savingAiConfig}
-                className="flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 disabled:opacity-50 text-white font-semibold rounded-lg border border-white/40 transition-all"
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-200"
+                style={{
+                  background: savingAiConfig
+                    ? "rgba(59, 130, 246, 0.5)"
+                    : "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                  color: "white",
+                  boxShadow: "0 8px 16px rgba(59, 130, 246, 0.3)",
+                }}
+                onMouseEnter={(e) => {
+                  if (!savingAiConfig) {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "0 12px 20px rgba(59, 130, 246, 0.4)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 8px 16px rgba(59, 130, 246, 0.3)";
+                }}
               >
                 <Save size={18} />
                 {savingAiConfig ? "Sauvegarde..." : "Sauvegarder"}
               </button>
             </div>
-          </>
+          </div>
         )}
 
         {activeTab === "system" && (
-          <>
+          <div className="space-y-6">
+            {/* Header */}
+            <div>
+              <h2 className="text-xl font-bold text-white mb-2">Gestion système</h2>
+              <p className="text-gray-400 text-sm">Bans, maintenances et notifications globales</p>
+            </div>
+
             <AdminBanManagement users={users} />
 
-            {/* Maintenance Mode Section */}
-            <div className="mt-8 bg-white/5 border border-yellow-500/20 rounded-xl p-6">
+            {/* Maintenance Mode */}
+            <div
+              className="rounded-2xl p-6"
+              style={{
+                background: "rgba(17, 17, 17, 0.6)",
+                border: "1px solid rgba(234, 179, 8, 0.2)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+              }}
+            >
               <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
                 <Clock size={20} className="text-yellow-500" />
                 Mode maintenance
@@ -707,87 +790,94 @@ export default function Admin() {
                 {/* Form */}
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
                       Titre
                     </label>
                     <input
                       type="text"
                       value={maintenanceTitle}
                       onChange={(e) => setMaintenanceTitle(e.target.value)}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500/50 transition-colors"
                       placeholder="ex: Mise à jour système"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
                       Message
                     </label>
                     <textarea
                       value={maintenanceMessage}
                       onChange={(e) => setMaintenanceMessage(e.target.value)}
                       rows={3}
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40 resize-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500/50 transition-colors resize-none"
                       placeholder="Entrez le message de maintenance..."
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
-                      Durée (minutes)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={maintenanceDuration}
-                      onChange={(e) =>
-                        setMaintenanceDuration(parseInt(e.target.value, 10))
-                      }
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40"
-                    />
-                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
+                        Durée (min)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        value={maintenanceDuration}
+                        onChange={(e) =>
+                          setMaintenanceDuration(parseInt(e.target.value, 10))
+                        }
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500/50 transition-colors"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-foreground/70 mb-2">
-                      Sévérité
-                    </label>
-                    <select
-                      value={maintenanceSeverity}
-                      onChange={(e) =>
-                        setMaintenanceSeverity(
-                          e.target.value as "info" | "warning" | "critical",
-                        )
-                      }
-                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-white/40"
-                    >
-                      <option value="info">Information</option>
-                      <option value="warning">Avertissement</option>
-                      <option value="critical">Critique (bloque l'app)</option>
-                    </select>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide text-xs">
+                        Sévérité
+                      </label>
+                      <select
+                        value={maintenanceSeverity}
+                        onChange={(e) =>
+                          setMaintenanceSeverity(
+                            e.target.value as "info" | "warning" | "critical",
+                          )
+                        }
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500/50 transition-colors"
+                      >
+                        <option value="info">Info</option>
+                        <option value="warning">Avertissement</option>
+                        <option value="critical">Critique</option>
+                      </select>
+                    </div>
                   </div>
 
                   <button
                     onClick={handleCreateMaintenance}
                     disabled={savingMaintenance}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 disabled:opacity-50 text-yellow-200 font-semibold rounded-lg border border-yellow-500/50 transition-all"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200"
+                    style={{
+                      background: savingMaintenance
+                        ? "rgba(234, 179, 8, 0.3)"
+                        : "rgba(234, 179, 8, 0.2)",
+                      border: "1px solid rgba(234, 179, 8, 0.5)",
+                      color: "rgb(250, 204, 21)",
+                      opacity: savingMaintenance ? 0.5 : 1,
+                    }}
                   >
                     <Clock size={18} />
                     {savingMaintenance ? "Création..." : "Démarrer maintenance"}
                   </button>
                 </div>
 
-                {/* Active Maintenance */}
-                <div>
+                {/* Active Maintenances */}
+                <div className="bg-white/[0.02] rounded-xl p-4 border border-white/10">
                   <h4 className="text-sm font-semibold text-white mb-4">
-                    Maintenances actives (
-                    {maintenanceNotices.filter((n) => n.isActive).length})
+                    Actives ({maintenanceNotices.filter((n) => n.isActive).length})
                   </h4>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                  <div className="space-y-3 max-h-80 overflow-y-auto">
                     {maintenanceNotices.filter((n) => n.isActive).length ===
                     0 ? (
-                      <p className="text-xs text-foreground/50">
-                        Pas de maintenance en cours
-                      </p>
+                      <p className="text-xs text-gray-500">Pas de maintenance</p>
                     ) : (
                       maintenanceNotices
                         .filter((n) => n.isActive)
@@ -796,12 +886,12 @@ export default function Admin() {
                             key={notice.id}
                             className="bg-white/5 border border-yellow-500/20 rounded-lg p-3"
                           >
-                            <div className="flex justify-between items-start">
+                            <div className="flex justify-between items-start gap-2">
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm text-white font-medium">
                                   {notice.title}
                                 </p>
-                                <p className="text-xs text-foreground/50 mt-1 truncate">
+                                <p className="text-xs text-gray-500 mt-1 line-clamp-2">
                                   {notice.message}
                                 </p>
                                 <p
@@ -813,18 +903,12 @@ export default function Admin() {
                                         : "text-blue-400"
                                   }`}
                                 >
-                                  {notice.severity === "critical"
-                                    ? "CRITIQUE"
-                                    : ""}
-                                  {notice.severity === "warning"
-                                    ? "AVERTISSEMENT"
-                                    : ""}
-                                  {notice.severity === "info" ? "INFO" : ""}
+                                  {notice.severity.toUpperCase()}
                                 </p>
                               </div>
                               <button
                                 onClick={() => handleEndMaintenance(notice.id)}
-                                className="ml-2 text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-foreground/70 hover:text-foreground transition-colors"
+                                className="px-3 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white transition-colors text-xs font-medium whitespace-nowrap"
                               >
                                 Terminer
                               </button>
@@ -836,7 +920,7 @@ export default function Admin() {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 

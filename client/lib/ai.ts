@@ -1,6 +1,3 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "./firebase";
-
 export interface AIConfig {
   model: string;
   systemPrompt: string;
@@ -18,23 +15,29 @@ const DEFAULT_CONFIG: AIConfig = {
 export class AIService {
   static async getConfig(): Promise<AIConfig> {
     try {
-      const configRef = doc(db, "settings", "ai");
-      const configSnap = await getDoc(configRef);
-
-      if (configSnap.exists()) {
-        return { ...DEFAULT_CONFIG, ...configSnap.data() } as AIConfig;
+      const response = await fetch("/api/ai/config");
+      if (!response.ok) {
+        console.debug("Failed to fetch AI config, using default");
+        return DEFAULT_CONFIG;
       }
-      return DEFAULT_CONFIG;
+      return await response.json();
     } catch (error) {
-      console.debug("Using default AI config", error);
+      console.debug("Error fetching AI config, using default:", error);
       return DEFAULT_CONFIG;
     }
   }
 
   static async updateConfig(config: Partial<AIConfig>): Promise<void> {
     try {
-      const configRef = doc(db, "settings", "ai");
-      await setDoc(configRef, config, { merge: true });
+      const response = await fetch("/api/ai/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(config),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update AI config");
+      }
     } catch (error) {
       throw new Error("Erreur lors de la mise à jour de la configuration IA");
     }

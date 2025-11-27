@@ -352,42 +352,29 @@ export default function Register() {
               </div>
             </div>
 
-            {/* Confirm Password Field */}
-            <div className="group">
-              <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
-                Confirmer le mot de passe
-              </label>
-              <div
-                className="relative rounded-2xl transition-all duration-200 flex items-center"
-                style={{
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(255, 255, 255, 0.07)",
-                  boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
-                  e.currentTarget.style.boxShadow =
-                    "0 0 12px rgba(59, 130, 246, 0.2)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
-                }}
-              >
-                <Lock
-                  size={18}
-                  className="absolute left-4 text-gray-500 pointer-events-none"
-                />
+            {/* Math Captcha Field */}
+            {captcha && (
+              <div className="group">
+                <label className="block text-xs font-medium text-gray-300 mb-2 uppercase tracking-wider">
+                  Captcha: {captcha.num1} {captcha.operator} {captcha.num2} = ?
+                </label>
                 <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full bg-transparent pl-12 pr-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium"
+                  type="number"
+                  value={captchaInput}
+                  onChange={(e) => setCaptchaInput(e.target.value)}
+                  placeholder="Votre réponse"
+                  className="w-full bg-transparent px-4 py-3.5 text-white placeholder-gray-600 focus:outline-none text-sm font-medium rounded-2xl"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid rgba(255, 255, 255, 0.07)",
+                  }}
                   required
                 />
+                <p className="text-xs text-gray-600 mt-1">
+                  Résolvez ce calcul simple pour vérifier que vous êtes humain.
+                </p>
               </div>
-            </div>
+            )}
 
             {/* License Key Field - Optional */}
             <div className="group">

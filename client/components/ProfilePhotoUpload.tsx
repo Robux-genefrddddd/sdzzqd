@@ -111,14 +111,11 @@ export function ProfilePhotoUpload({
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-white/80">
-        Photo de profil
-      </label>
-      <div className="flex items-end gap-4">
+    <div className="space-y-2.5">
+      <div className="flex items-end gap-3">
         {/* Photo Preview */}
         <div className="relative">
-          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/20 bg-gradient-to-br from-blue-500/50 to-blue-600/50 flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/30 bg-gradient-to-br from-primary/40 to-primary/50 flex items-center justify-center flex-shrink-0">
             {preview ? (
               <img
                 src={preview}

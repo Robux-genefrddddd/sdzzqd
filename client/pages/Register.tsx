@@ -4,10 +4,10 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { PlanType, UserData } from "@/contexts/AuthContext";
+import { useTOS } from "@/contexts/TOSContext";
 import { Mail, Lock, Key } from "lucide-react";
 import { toast } from "sonner";
 import { IPService } from "@/lib/ip-service";
-import TOSModal from "@/components/TOSModal";
 
 interface CaptchaData {
   num1: number;

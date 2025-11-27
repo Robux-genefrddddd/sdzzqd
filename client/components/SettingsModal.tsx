@@ -99,8 +99,20 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
         }`}
       >
         {/* Header */}
-        <DialogHeader className="px-6 py-4 border-b border-white/[0.06]">
-          <DialogTitle className="text-foreground text-lg font-semibold">
+        <DialogHeader
+          className={`px-6 py-4 border-b transition-all duration-300 ${
+            isDark
+              ? "border-white/[0.06]"
+              : "border-black/[0.08]"
+          }`}
+        >
+          <DialogTitle
+            className={`text-lg font-semibold transition-colors duration-300 ${
+              isDark
+                ? "text-foreground"
+                : "text-[#1A1A1A]"
+            }`}
+          >
             Paramètres
           </DialogTitle>
         </DialogHeader>

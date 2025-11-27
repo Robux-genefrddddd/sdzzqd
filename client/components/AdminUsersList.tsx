@@ -125,7 +125,7 @@ export default function AdminUsersList({
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-xl hover:border-blue-500/40 transition-all">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 bg-blue-500/20 rounded-lg">
@@ -152,41 +152,6 @@ export default function AdminUsersList({
           </p>
         </div>
 
-        <div className="p-4 bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20 rounded-xl hover:border-green-500/40 transition-all">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-green-500/20 rounded-lg">
-              <Globe size={18} className="text-green-400" />
-            </div>
-            <span className="text-foreground/60 text-xs uppercase font-semibold">
-              Cleans IPs
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-white">
-            {
-              Object.values(userIPs)
-                .flat()
-                .filter((ip) => !ip.isVPN).length
-            }
-          </p>
-        </div>
-
-        <div className="p-4 bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 rounded-xl hover:border-red-500/40 transition-all">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-red-500/20 rounded-lg">
-              <AlertCircle size={18} className="text-red-400" />
-            </div>
-            <span className="text-foreground/60 text-xs uppercase font-semibold">
-              VPN Users
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-white">
-            {
-              Object.values(userIPs)
-                .flat()
-                .filter((ip) => ip.isVPN).length
-            }
-          </p>
-        </div>
       </div>
 
       {/* Users Table */}
@@ -215,9 +180,6 @@ export default function AdminUsersList({
                     Utilisateur
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-foreground/70 uppercase">
-                    IP Adresses
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-foreground/70 uppercase">
                     Plan
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-foreground/70 uppercase">
@@ -243,33 +205,6 @@ export default function AdminUsersList({
                         <p className="text-xs text-foreground/50 mt-1">
                           ID: {user.uid.substring(0, 12)}...
                         </p>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-1">
-                        {userIPs[user.uid] && userIPs[user.uid].length > 0 ? (
-                          userIPs[user.uid].map((ip, idx) => (
-                            <div
-                              key={idx}
-                              className="text-sm flex items-center gap-2"
-                            >
-                              <span
-                                className={`${getIPStatusColor(ip)} font-mono text-xs`}
-                              >
-                                {ip.ipAddress.substring(0, 15)}...
-                              </span>
-                              {ip.isVPN && (
-                                <span className="text-red-400 text-xs bg-red-500/20 px-2 py-0.5 rounded">
-                                  VPN
-                                </span>
-                              )}
-                            </div>
-                          ))
-                        ) : (
-                          <span className="text-foreground/50 text-xs">
-                            Aucune IP
-                          </span>
-                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4">

@@ -91,7 +91,13 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0f0f0f] border-0 rounded-[12px] w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden shadow-2xl">
+      <DialogContent
+        className={`border-0 rounded-[12px] w-[460px] max-h-[85vh] flex flex-col p-0 overflow-hidden shadow-2xl transition-all duration-300 ${
+          isDark
+            ? "bg-[#0f0f0f]"
+            : "bg-[#FAFAFA] border border-black/5"
+        }`}
+      >
         {/* Header */}
         <DialogHeader className="px-6 py-4 border-b border-white/[0.06]">
           <DialogTitle className="text-foreground text-lg font-semibold">

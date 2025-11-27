@@ -130,7 +130,8 @@ function parseMarkdownElements(text: string): ReactNode[] {
       elements.push(
         <blockquote
           key={`quote-${i}`}
-          className="border-l-4 border-orange-500 pl-4 py-2 my-3 text-white/70 italic bg-orange-500/10 rounded-r-lg"
+          className="border-l-4 border-orange-500 pl-4 py-2 my-3 text-white/70 italic rounded-r-lg leading-[1.55]"
+          style={{ backgroundColor: "rgba(88, 166, 255, 0.08)" }}
         >
           {parseInlineMarkdown(quoteText)}
         </blockquote>,

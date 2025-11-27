@@ -575,9 +575,21 @@ export function Sidebar({
 
       {/* Edit Conversation Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-card border border-white/[0.1] rounded-xl">
+        <DialogContent
+          className={`border rounded-xl transition-all duration-300 ${
+            isDark
+              ? "bg-card border-white/[0.1]"
+              : "bg-[#FAFAFA] border-black/[0.08]"
+          }`}
+        >
           <DialogHeader>
-            <DialogTitle className="text-foreground text-lg font-semibold">
+            <DialogTitle
+              className={`text-lg font-semibold transition-colors duration-300 ${
+                isDark
+                  ? "text-foreground"
+                  : "text-[#1A1A1A]"
+              }`}
+            >
               Modifier la Conversation
             </DialogTitle>
           </DialogHeader>
@@ -587,7 +599,11 @@ export function Sidebar({
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               placeholder="Nom de la conversation..."
-              className="w-full bg-white/[0.02] border border-white/[0.1] rounded-lg px-4 py-2.5 text-foreground placeholder-foreground/40 focus:outline-none focus:border-primary/50 focus:bg-white/[0.05] transition-colors text-sm"
+              className={`w-full border rounded-lg px-4 py-2.5 focus:outline-none transition-all text-sm ${
+                isDark
+                  ? "bg-white/[0.02] border-white/[0.1] text-foreground placeholder-foreground/40 focus:border-primary/50 focus:bg-white/[0.05]"
+                  : "bg-[#FFFFFF] border-black/[0.08] text-[#1A1A1A] placeholder-[#3F3F3F]/40 focus:border-primary/50 focus:bg-[#FFFFFF]"
+              }`}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   handleSaveEdit();
@@ -599,13 +615,21 @@ export function Sidebar({
           <DialogFooter className="gap-2">
             <button
               onClick={() => setIsDialogOpen(false)}
-              className="px-4 py-2.5 text-foreground/70 border border-white/[0.1] rounded-lg hover:bg-white/[0.05] transition-colors text-sm font-medium hover:-translate-y-0.5"
+              className={`px-4 py-2.5 border rounded-lg transition-all text-sm font-medium hover:-translate-y-0.5 ${
+                isDark
+                  ? "text-foreground/70 border-white/[0.1] hover:bg-white/[0.05]"
+                  : "text-[#3F3F3F]/70 border-black/[0.08] hover:bg-black/[0.05]"
+              }`}
             >
               Annuler
             </button>
             <button
               onClick={handleSaveEdit}
-              className="px-4 py-2.5 bg-primary/20 text-primary border border-primary/30 rounded-lg hover:bg-primary/30 transition-colors font-medium text-sm hover:-translate-y-0.5"
+              className={`px-4 py-2.5 border rounded-lg transition-all font-medium text-sm hover:-translate-y-0.5 ${
+                isDark
+                  ? "bg-primary/20 text-primary border-primary/30 hover:bg-primary/30"
+                  : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
+              }`}
             >
               Enregistrer
             </button>

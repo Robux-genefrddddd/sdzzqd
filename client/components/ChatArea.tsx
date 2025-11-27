@@ -495,9 +495,9 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
           </div>
         </div>
 
-        {/* Image Generation Loading State */}
-        {generatingImage && (
-          <div className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg bg-gradient-to-r from-purple-600/20 to-purple-500/10 border border-purple-500/40 animate-pulse">
+          {/* Image Generation Loading State */}
+          {generatingImage && (
+            <div className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg bg-gradient-to-r from-purple-600/20 to-purple-500/10 border border-purple-500/40 animate-pulse">
             <div className="flex gap-1">
               <div
                 className="w-2 h-2 rounded-full bg-purple-400 animate-bounce"

@@ -2,16 +2,7 @@
  * Security utilities for input validation, sanitization, and output encoding.
  * Prevents XSS, injection attacks, and other security vulnerabilities.
  */
-
-// HTML entities map for encoding
-const HTML_ENTITIES: Record<string, string> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#x27;",
-  "/": "&#x2F;",
-};
+import DOMPurify from "dompurify";
 
 /**
  * Escape HTML special characters to prevent XSS attacks.
@@ -19,7 +10,8 @@ const HTML_ENTITIES: Record<string, string> = {
  */
 export function escapeHtml(text: string): string {
   if (!text || typeof text !== "string") return "";
-  return text.replace(/[&<>"'\/]/g, (char) => HTML_ENTITIES[char] || char);
+  // Use DOMPurify for safe HTML escaping
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
 }
 
 /**

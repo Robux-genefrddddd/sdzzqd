@@ -271,7 +271,11 @@ export function Sidebar({
             <div className="flex items-center gap-1">
               <button
                 onClick={onClose}
-                className="p-1.5 hover:bg-white/[0.08] rounded-lg transition-all text-foreground/60 hover:text-foreground flex-shrink-0 hover:-translate-y-0.5"
+                className={`p-1.5 rounded-lg transition-all flex-shrink-0 hover:-translate-y-0.5 ${
+                  isDark
+                    ? "hover:bg-white/[0.08] text-foreground/60 hover:text-foreground"
+                    : "hover:bg-black/[0.08] text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                }`}
                 aria-label="Close"
                 title="Close"
               >
@@ -279,11 +283,23 @@ export function Sidebar({
               </button>
               <Popover open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <PopoverTrigger asChild>
-                  <button className="p-1.5 hover:bg-white/[0.08] rounded-lg transition-all text-foreground/60 hover:text-foreground flex-shrink-0 hover:-translate-y-0.5">
+                  <button
+                    className={`p-1.5 rounded-lg transition-all flex-shrink-0 hover:-translate-y-0.5 ${
+                      isDark
+                        ? "hover:bg-white/[0.08] text-foreground/60 hover:text-foreground"
+                        : "hover:bg-black/[0.08] text-[#3F3F3F]/60 hover:text-[#1A1A1A]"
+                    }`}
+                  >
                     <MoreVertical size={16} />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-1 bg-card border border-white/[0.1] rounded-lg shadow-lg">
+                <PopoverContent
+                  className={`w-40 p-1 border rounded-lg shadow-lg transition-all duration-300 ${
+                    isDark
+                      ? "bg-card border-white/[0.1]"
+                      : "bg-[#FAFAFA] border-black/[0.08]"
+                  }`}
+                >
                   <div className="space-y-0.5">
                     <button
                       onClick={() => {

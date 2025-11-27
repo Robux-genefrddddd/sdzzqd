@@ -116,8 +116,8 @@ export function SettingsModal({ isOpen, onOpenChange }: SettingsModalProps) {
         </DialogHeader>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="px-6 py-6 space-y-8">
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+          <div className="space-y-5">
             {/* Section 1: Profile Photo */}
             {user?.uid && (
               <div

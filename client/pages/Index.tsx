@@ -81,8 +81,12 @@ export default function Index() {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-background items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-white" />
+      <div className="flex h-screen bg-background items-center justify-center transition-colors duration-300">
+        <Loader2
+          className={`w-8 h-8 animate-spin transition-colors duration-300 ${
+            isDark ? "text-white" : "text-[#1A1A1A]"
+          }`}
+        />
       </div>
     );
   }

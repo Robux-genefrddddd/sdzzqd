@@ -592,14 +592,15 @@ export function ChatArea({ conversationId }: ChatAreaProps) {
                             className="rounded-lg rounded-tr-none py-2 px-3 text-sm break-words transition-all duration-300"
                             style={{
                               background: isDark
-                                ? "linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%)"
-                                : "linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)",
+                                ? "linear-gradient(135deg, #1E40AF 0%, #1E3A8A 100%)"
+                                : "linear-gradient(135deg, #2563EB 0%, #3B82F6 100%)",
                               color: "#FFFFFF",
                               height: "auto",
                               lineHeight: "1.3",
                               boxShadow: isDark
                                 ? "0 4px 16px rgba(0, 0, 0, 0.3)"
-                                : "0 2px 8px rgba(37, 99, 235, 0.2)",
+                                : "0 3px 12px rgba(37, 99, 235, 0.25)",
+                              backdropFilter: "blur(4px)",
                             }}
                           >
                             <MessageRenderer

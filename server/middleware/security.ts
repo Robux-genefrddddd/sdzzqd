@@ -316,7 +316,7 @@ export const DailyResetSchema = z.object({
   userId: FirebaseUidSchema,
 });
 
-export const AIChat Schema = z.object({
+export const AIChatSchema = z.object({
   idToken: IdTokenSchema,
   userMessage: z.string().min(1).max(5000).trim(),
   conversationHistory: z
@@ -347,12 +347,4 @@ export const AIConfigSchema = z.object({
   model: z.string().optional(),
   temperature: z.number().min(0).max(2).optional(),
   maxTokens: z.number().int().min(1).max(4096).optional(),
-});
-
-export const GetIPSchema = z.object({
-  // Optional schema for IP endpoint
-});
-
-export const CheckVPNSchema = z.object({
-  ipAddress: z.string().ip({ version: "v4" }).or(z.string().ip({ version: "v6" })),
 });

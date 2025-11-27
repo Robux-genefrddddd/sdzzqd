@@ -28,13 +28,21 @@ const CheckIPLimitSchema = z.object({
 });
 
 const RecordUserIPSchema = z.object({
-  userId: z.string().min(20).max(40).regex(/^[a-zA-Z0-9]{20,40}$/),
+  userId: z
+    .string()
+    .min(20)
+    .max(40)
+    .regex(/^[a-zA-Z0-9]{20,40}$/),
   ipAddress: IPAddressSchema,
   email: z.string().email().optional(),
 });
 
 const UpdateUserIPLoginSchema = z.object({
-  userId: z.string().min(20).max(40).regex(/^[a-zA-Z0-9]{20,40}$/),
+  userId: z
+    .string()
+    .min(20)
+    .max(40)
+    .regex(/^[a-zA-Z0-9]{20,40}$/),
   ipAddress: IPAddressSchema,
 });
 

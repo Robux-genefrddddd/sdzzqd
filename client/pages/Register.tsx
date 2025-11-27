@@ -291,13 +291,16 @@ export default function Register() {
                   boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(59, 130, 246, 0.5)";
                   e.currentTarget.style.boxShadow =
                     "0 0 12px rgba(59, 130, 246, 0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 0 rgba(59, 130, 246, 0)";
                 }}
               >
                 <Mail
@@ -328,13 +331,16 @@ export default function Register() {
                   boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(59, 130, 246, 0.5)";
                   e.currentTarget.style.boxShadow =
                     "0 0 12px rgba(59, 130, 246, 0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 0 rgba(59, 130, 246, 0)";
                 }}
               >
                 <Lock
@@ -390,13 +396,16 @@ export default function Register() {
                   boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(59, 130, 246, 0.5)";
                   e.currentTarget.style.boxShadow =
                     "0 0 12px rgba(59, 130, 246, 0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 0 rgba(59, 130, 246, 0)";
                 }}
               >
                 <Key
@@ -436,7 +445,8 @@ export default function Register() {
                 }
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLButtonElement).style.transform =
+                  "scale(1)";
               }}
             >
               {loading ? (

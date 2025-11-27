@@ -169,13 +169,16 @@ export default function Login() {
                   boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(59, 130, 246, 0.5)";
                   e.currentTarget.style.boxShadow =
                     "0 0 12px rgba(59, 130, 246, 0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 0 rgba(59, 130, 246, 0)";
                 }}
               >
                 <Mail
@@ -206,13 +209,16 @@ export default function Login() {
                   boxShadow: "0 0 0 0 rgba(59, 130, 246, 0)",
                 }}
                 onFocus={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(59, 130, 246, 0.5)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(59, 130, 246, 0.5)";
                   e.currentTarget.style.boxShadow =
                     "0 0 12px rgba(59, 130, 246, 0.2)";
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.border = "1px solid rgba(255, 255, 255, 0.07)";
-                  e.currentTarget.style.boxShadow = "0 0 0 0 rgba(59, 130, 246, 0)";
+                  e.currentTarget.style.border =
+                    "1px solid rgba(255, 255, 255, 0.07)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 0 0 rgba(59, 130, 246, 0)";
                 }}
               >
                 <Lock
@@ -250,7 +256,8 @@ export default function Login() {
                 }
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLButtonElement).style.transform =
+                  "scale(1)";
               }}
             >
               {loading ? (
@@ -273,9 +280,7 @@ export default function Login() {
 
           {/* Register Link */}
           <div className="text-center">
-            <p className="text-sm text-gray-500 mb-3">
-              Pas encore de compte?
-            </p>
+            <p className="text-sm text-gray-500 mb-3">Pas encore de compte?</p>
             <Link
               to="/register"
               className="inline-block px-6 py-2.5 rounded-2xl text-white text-sm font-medium transition-all duration-200"

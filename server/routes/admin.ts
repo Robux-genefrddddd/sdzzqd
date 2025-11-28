@@ -369,7 +369,7 @@ export const handleGetSystemStats: RequestHandler = async (req, res) => {
       messagesProcessedToday: Math.floor(Math.random() * 1000) + 100,
       apiCallsToday: Math.floor(Math.random() * 5000) + 1000,
       averageResponseTime: Math.floor(Math.random() * 200) + 50,
-      errorRate: (Math.random() * 0.5).toFixed(2),
+      errorRate: parseFloat((Math.random() * 0.5).toFixed(2)),
       uptime: 0.9999,
     };
 

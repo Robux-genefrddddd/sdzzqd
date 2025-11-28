@@ -73,42 +73,77 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Real-time listener for maintenance notices
   useEffect(() => {
     let isMounted = true;
+    let unsubscribeMaintenance: (() => void) | null = null;
 
-    const maintenanceQuery = query(
-      collection(db, "maintenance_notices"),
-      where("isActive", "==", true),
-    );
+    const setupMaintenanceListener = async () => {
+      try {
+        const maintenanceQuery = query(
+          collection(db, "maintenance_notices"),
+          where("isActive", "==", true),
+        );
 
-    const unsubscribeMaintenance = onSnapshot(
-      maintenanceQuery,
-      (snapshot) => {
-        if (!isMounted) return;
+        unsubscribeMaintenance = onSnapshot(
+          maintenanceQuery,
+          (snapshot) => {
+            if (!isMounted) return;
 
-        if (snapshot.empty) {
-          setMaintenanceNotice(null);
-        } else {
-          const noticeDoc = snapshot.docs[0];
-          const notice = {
-            id: noticeDoc.id,
-            ...noticeDoc.data(),
-          } as MaintenanceNotice;
+            if (snapshot.empty) {
+              setMaintenanceNotice(null);
+            } else {
+              const noticeDoc = snapshot.docs[0];
+              const notice = {
+                id: noticeDoc.id,
+                ...noticeDoc.data(),
+              } as MaintenanceNotice;
 
-          // Check if maintenance has expired
-          if (notice.endTime && notice.endTime.toDate() < new Date()) {
-            setMaintenanceNotice(null);
-          } else {
-            setMaintenanceNotice(notice);
-          }
+              // Check if maintenance has expired
+              if (notice.endTime && notice.endTime.toDate() < new Date()) {
+                setMaintenanceNotice(null);
+              } else {
+                setMaintenanceNotice(notice);
+              }
+            }
+          },
+          (error) => {
+            console.error("Error listening to maintenance notices:", error);
+            // Fallback: try to load once
+            if (isMounted) {
+              SystemNoticesService.getActiveMaintenanceNotice()
+                .then((notice) => {
+                  if (isMounted) {
+                    setMaintenanceNotice(notice);
+                  }
+                })
+                .catch((err) => {
+                  console.error("Fallback maintenance load failed:", err);
+                });
+            }
+          },
+        );
+      } catch (error) {
+        console.error("Failed to set up maintenance listener:", error);
+        // Fallback: try to load once
+        if (isMounted) {
+          SystemNoticesService.getActiveMaintenanceNotice()
+            .then((notice) => {
+              if (isMounted) {
+                setMaintenanceNotice(notice);
+              }
+            })
+            .catch((err) => {
+              console.error("Fallback maintenance load failed:", err);
+            });
         }
-      },
-      (error) => {
-        console.error("Error listening to maintenance notices:", error);
-      },
-    );
+      }
+    };
+
+    setupMaintenanceListener();
 
     return () => {
       isMounted = false;
-      unsubscribeMaintenance();
+      if (unsubscribeMaintenance) {
+        unsubscribeMaintenance();
+      }
     };
   }, []);
 
